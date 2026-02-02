@@ -1,0 +1,49 @@
+===============================================================================================================
+
+❯ nc 10.0.118.104 9999
+Welcome to our super cool AES-encryption portal!
+Oops! We forgot the admin credentials, but we remember the username was like c?s and the password was like c?f.
+When we tried 'user:c?s' and 'pass:c?f', the portal gave us these hex strings:
+
+e25dbc5241ad9fbe40d9aad97f9a57f79a584654fbe8e55a985be1317fe8bc66
+e25dbc5241ad9fbe40d9aad97f9a57f786406e25dce45b81e516927db06d38a5
+
+To unlock the portal, enter the correct hex strings that decrypt to the right credentials. Good luck!
+Enter your 8 digit roll no : 22110089
+Enter username hex string : 636e73
+Enter password hex string : 637466
+Error 3 while decrypting in CBC mode
+Error! Something went wrong. Try to connect again.
+
+===============================================================================================================
+
+❯ nc 10.0.118.104 9999
+Welcome to our super cool AES-encryption portal!
+Oops! We forgot the admin credentials, but we remember the username was like c?s and the password was like c?f.
+When we tried 'user:c?s' and 'pass:c?f', the portal gave us these hex strings:
+
+97094e187264d1dcdb8c5adfa9da58c68ab04023d376d8476e76a0793b991f99
+97094e187264d1dcdb8c5adfa9da58c6a49af76abbd5fb276a4136efa9d05673
+
+To unlock the portal, enter the correct hex strings that decrypt to the right credentials. Good luck!
+Enter your 8 digit roll no : 22110089
+Enter username hex string : 97584e187264d1dcdb8c5adfa9da58c68ab04023d376d8476e76a0793b991f99
+Enter password hex string : 97424e187264d1dcdb8c5adfa9da58c6a49af76abbd5fb276a4136efa9d05673
+Not even close. Try again!
+
+===============================================================================================================
+
+❯ nc 10.0.118.104 9999
+Welcome to our super cool AES-encryption portal!
+Oops! We forgot the admin credentials, but we remember the username was like c?s and the password was like c?f.
+When we tried 'user:c?s' and 'pass:c?f', the portal gave us these hex strings:
+
+d06b91365ae9f3e59308b84ba71b6e53123b8dcac31578ea1c4ee5496fbbce0e
+d06b91365ae9f3e59308b84ba71b6e53688109854f7dc49373de770bc6390dcc
+
+To unlock the portal, enter the correct hex strings that decrypt to the right credentials. Good luck!
+Enter your 8 digit roll no : 22110089
+Enter username hex string : d06b91365ae9a2e59308b84ba71b6e53123b8dcac31578ea1c4ee5496fbbce0e
+Enter password hex string : d06b91365ae9b8e59308b84ba71b6e53688109854f7dc49373de770bc6390dcc
+Congratulations! You've unlocked the portal!
+Here's the flag for your efforts: cnsctf{22110089_1770070630.6744974_4ded1d3b8ab00a92f7e72766b5fda132b8ca95f655efa328ca23a4a5167a9283}
