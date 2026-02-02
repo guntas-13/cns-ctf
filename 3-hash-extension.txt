@@ -1,0 +1,61 @@
+$ git clone --depth=1 https://github.com/2H-K/hashpumpy_changed
+$ apt-get install g++ libssl-dev
+$ cd hashpumpy_changed/
+$ make
+$ make install
+$ hashpump --help
+> HashPump [-h help] [-t test] [-s signature] [-d data] [-a additional] [-k keylength]
+     HashPump generates strings to exploit signatures vulnerable to the Hash Length Extension Attack.
+     -h --help          Display this message.
+     -t --test          Run tests to verify each algorithm is operating properly.
+     -s --signature     The signature from known message.
+     -d --data          The data from the known message.
+     -a --additional    The information you would like to add to the known message.
+     -k --keylength     The length in bytes of the key being used to sign the original message with.
+     Version 1.2.0 with CRC32, MD5, SHA1, SHA256 and SHA512 support.
+     <Developed by bwall(@botnet_hunter)>
+
+$  hashpump \
+  -s c99963ab62fa272f73238a3e79f0f21d9837fa33cc34c8ae094a72d5110823ef \
+  -d "username=cns431&groups=students,users," \
+  -a "&groups=admins," \
+  -k 16
+> c51ce3e9b4ed30abf8a1eaae23e9b7df3bf3165429f0d1b0f7696c4772cc1247
+username=cns431&groups=students,users,\x80\x00\x00\x00\x00\x00\x00\x00\x01\xb0&groups=admins,
+
+$ hashpump \
+  -s c99963ab62fa272f73238a3e79f0f21d9837fa33cc34c8ae094a72d5110823ef \
+  -d "username=cns431&groups=students,users," \
+  -a "&groups=admins," \
+  -k 16 \
+| tail -n 1 | printf '%b' "$(cat)" | xxd -p -c 9999
+> 757365726e616d653d636e733433312667726f7570733d73747564656e74732c75736572732c800000000000000001b02667726f7570733d61646d696e732c
+
+
+============================
+
+❯ nc 10.0.118.104 4310
+
+Welcome to the CNS431 Hash Extension Attack Challenge!
+Hold on to your hats, because this is going to be a wild ride!
+We now use SHA256 as a message-authentication code to sign and authenticate users' cookies!
+
+Here is your cookie as plaintext:
+username=cns431&groups=students,users,
+And here it is as hex:
+757365726e616d653d636e733433312667726f7570733d73747564656e74732c75736572732c
+
+SECRET_KEY is a 16-byte key that is unknown to you
+The signature is computed as SHA256(SECRET_KEY || message)
+The signature of your cookie is:
+c99963ab62fa272f73238a3e79f0f21d9837fa33cc34c8ae094a72d5110823ef
+
+Please provide your cookie encoded as hex:
+757365726e616d653d636e733433312667726f7570733d73747564656e74732c75736572732c800000000000000001b02667726f7570733d61646d696e732c
+Please provide the signature SHA256(SECRET_KEY || message) of the cookie:
+c51ce3e9b4ed30abf8a1eaae23e9b7df3bf3165429f0d1b0f7696c4772cc1247
+Decoded cookie: b'username=cns431&groups=students,users,\x80\x00\x00\x00\x00\x00\x00\x00\x01\xb0&groups=admins,'
+Signature verified
+Welcome admin! Here is your flag:
+431fl@g{D3@D3Xt3ns!0nL3ngth}
+Goodbye
