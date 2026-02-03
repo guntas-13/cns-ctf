@@ -6,9 +6,11 @@ secret_message = b"Hello Bob! This is a secret message, to be kept within CNS431
 # secret_message = b"Hello Bob! This is a secret message, to be kept within CNS431.\n"
 # secret_message = b"Hello Bob! This is a secret message, to be kept within CNS431.\r\n"
 
+h = sum(secret_message)
+
 # h = int.from_bytes(sha256(secret_message).digest(), 'big')
 # h = int.from_bytes(sha224(secret_message).digest(), 'big')
-h = int.from_bytes(sha1(secret_message).digest(), 'big')
+# h = int.from_bytes(sha1(secret_message).digest(), 'big')
 # h = int.from_bytes(md5(secret_message).digest(), 'big')
 
 # h = int.from_bytes(sha256(secret_message).hexdigest().encode(), 'big')
