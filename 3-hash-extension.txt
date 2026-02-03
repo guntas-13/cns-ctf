@@ -15,22 +15,13 @@ $ hashpump --help
      Version 1.2.0 with CRC32, MD5, SHA1, SHA256 and SHA512 support.
      <Developed by bwall(@botnet_hunter)>
 
-$  hashpump \
-  -s c99963ab62fa272f73238a3e79f0f21d9837fa33cc34c8ae094a72d5110823ef \
-  -d "username=cns431&groups=students,users," \
-  -a "&groups=admins," \
-  -k 16
-> c51ce3e9b4ed30abf8a1eaae23e9b7df3bf3165429f0d1b0f7696c4772cc1247
-username=cns431&groups=students,users,\x80\x00\x00\x00\x00\x00\x00\x00\x01\xb0&groups=admins,
-
 $ hashpump \
   -s c99963ab62fa272f73238a3e79f0f21d9837fa33cc34c8ae094a72d5110823ef \
   -d "username=cns431&groups=students,users," \
-  -a "&groups=admins," \
-  -k 16 \
-| tail -n 1 | printf '%b' "$(cat)" | xxd -p -c 9999
-> 757365726e616d653d636e733433312667726f7570733d73747564656e74732c75736572732c800000000000000001b02667726f7570733d61646d696e732c
-
+  -a "admins," \
+  -k 16
+> b977414d7bc068b298b08f842a78b51399254c73e704427f2078b59491102c65
+username=cns431&groups=students,users,\x80\x00\x00\x00\x00\x00\x00\x00\x01\xb0admins,
 
 ============================
 
@@ -51,10 +42,10 @@ The signature of your cookie is:
 c99963ab62fa272f73238a3e79f0f21d9837fa33cc34c8ae094a72d5110823ef
 
 Please provide your cookie encoded as hex:
-757365726e616d653d636e733433312667726f7570733d73747564656e74732c75736572732c800000000000000001b02667726f7570733d61646d696e732c
+757365726e616d653d636e733433312667726f7570733d73747564656e74732c75736572732c800000000000000001b061646d696e732c
 Please provide the signature SHA256(SECRET_KEY || message) of the cookie:
-c51ce3e9b4ed30abf8a1eaae23e9b7df3bf3165429f0d1b0f7696c4772cc1247
-Decoded cookie: b'username=cns431&groups=students,users,\x80\x00\x00\x00\x00\x00\x00\x00\x01\xb0&groups=admins,'
+b977414d7bc068b298b08f842a78b51399254c73e704427f2078b59491102c65
+Decoded cookie: b'username=cns431&groups=students,users,\x80\x00\x00\x00\x00\x00\x00\x00\x01\xb0admins,'
 Signature verified
 Welcome admin! Here is your flag:
 431fl@g{D3@D3Xt3ns!0nL3ngth}
