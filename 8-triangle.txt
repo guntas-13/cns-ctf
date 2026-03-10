@@ -1,0 +1,236 @@
+parmy@fedora:~$ gdb ./triangle
+GNU gdb (Fedora Linux) 16.3-1.fc42
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./triangle...
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.fedoraproject.org/>
+Enable debuginfod for this session? (y or [n]) n
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+(No debugging symbols found in ./triangle)
+(gdb) info functions
+All defined functions:
+
+Non-debugging symbols:
+0x0000000000400650  _init
+0x0000000000400680  __stack_chk_fail@plt
+0x0000000000400690  setbuf@plt
+0x00000000004006a0  system@plt
+0x00000000004006b0  printf@plt
+0x00000000004006c0  __libc_start_main@plt
+0x00000000004006d0  srand@plt
+0x00000000004006e0  time@plt
+0x00000000004006f0  __isoc99_scanf@plt
+0x0000000000400700  rand@plt
+0x0000000000400710  __gmon_start__@plt
+0x0000000000400720  _start
+0x0000000000400750  deregister_tm_clones
+0x0000000000400790  register_tm_clones
+0x00000000004007d0  __do_global_dtors_aux
+0x00000000004007f0  frame_dummy
+0x0000000000400816  display_number
+0x000000000040085a  f
+0x0000000000400895  C
+0x00000000004008e8  process
+0x000000000040097e  main
+0x0000000000400a10  __libc_csu_init
+0x0000000000400a80  __libc_csu_fini
+0x0000000000400a84  _fini
+(gdb) disassemble display_number
+Dump of assembler code for function display_number:
+   0x0000000000400816 <+0>:	push   %rbp
+   0x0000000000400817 <+1>:	mov    %rsp,%rbp
+   0x000000000040081a <+4>:	sub    $0x20,%rsp
+   0x000000000040081e <+8>:	mov    %edi,-0x14(%rbp)
+   0x0000000000400821 <+11>:	mov    %esi,-0x18(%rbp)
+   0x0000000000400824 <+14>:	call   0x400700 <rand@plt>
+   0x0000000000400829 <+19>:	mov    %eax,%edx
+   0x000000000040082b <+21>:	mov    -0x18(%rbp),%eax
+   0x000000000040082e <+24>:	sub    -0x14(%rbp),%eax
+   0x0000000000400831 <+27>:	lea    0x1(%rax),%ecx
+   0x0000000000400834 <+30>:	mov    %edx,%eax
+   0x0000000000400836 <+32>:	cltd
+   0x0000000000400837 <+33>:	idiv   %ecx
+   0x0000000000400839 <+35>:	mov    -0x14(%rbp),%eax
+   0x000000000040083c <+38>:	add    %edx,%eax
+   0x000000000040083e <+40>:	mov    %eax,-0x4(%rbp)
+   0x0000000000400841 <+43>:	mov    -0x4(%rbp),%eax
+   0x0000000000400844 <+46>:	mov    %eax,%esi
+   0x0000000000400846 <+48>:	mov    $0x400a94,%edi
+   0x000000000040084b <+53>:	mov    $0x0,%eax
+   0x0000000000400850 <+58>:	call   0x4006b0 <printf@plt>
+   0x0000000000400855 <+63>:	mov    -0x4(%rbp),%eax
+   0x0000000000400858 <+66>:	leave
+   0x0000000000400859 <+67>:	ret
+End of assembler dump.
+(gdb) disassemble f
+Dump of assembler code for function f:
+   0x000000000040085a <+0>:	push   %rbp
+   0x000000000040085b <+1>:	mov    %rsp,%rbp
+   0x000000000040085e <+4>:	mov    %edi,-0x14(%rbp)
+   0x0000000000400861 <+7>:	movq   $0x1,-0x8(%rbp)
+   0x0000000000400869 <+15>:	movl   $0x2,-0xc(%rbp)
+   0x0000000000400870 <+22>:	jmp    0x400887 <f+45>
+   0x0000000000400872 <+24>:	mov    -0xc(%rbp),%eax
+   0x0000000000400875 <+27>:	cltq
+   0x0000000000400877 <+29>:	mov    -0x8(%rbp),%rdx
+   0x000000000040087b <+33>:	imul   %rdx,%rax
+   0x000000000040087f <+37>:	mov    %rax,-0x8(%rbp)
+   0x0000000000400883 <+41>:	addl   $0x1,-0xc(%rbp)
+   0x0000000000400887 <+45>:	mov    -0xc(%rbp),%eax
+   0x000000000040088a <+48>:	cmp    -0x14(%rbp),%eax
+   0x000000000040088d <+51>:	jle    0x400872 <f+24>
+   0x000000000040088f <+53>:	mov    -0x8(%rbp),%rax
+   0x0000000000400893 <+57>:	pop    %rbp
+   0x0000000000400894 <+58>:	ret
+End of assembler dump.
+(gdb) disassemble C
+Dump of assembler code for function C:
+   0x0000000000400895 <+0>:	push   %rbp
+   0x0000000000400896 <+1>:	mov    %rsp,%rbp
+   0x0000000000400899 <+4>:	push   %r12
+   0x000000000040089b <+6>:	push   %rbx
+   0x000000000040089c <+7>:	sub    $0x8,%rsp
+   0x00000000004008a0 <+11>:	mov    %edi,-0x14(%rbp)
+   0x00000000004008a3 <+14>:	mov    %esi,-0x18(%rbp)
+   0x00000000004008a6 <+17>:	mov    -0x14(%rbp),%eax
+   0x00000000004008a9 <+20>:	mov    %eax,%edi
+   0x00000000004008ab <+22>:	call   0x40085a <f>
+   0x00000000004008b0 <+27>:	mov    %rax,%rbx
+   0x00000000004008b3 <+30>:	mov    -0x18(%rbp),%eax
+   0x00000000004008b6 <+33>:	mov    %eax,%edi
+   0x00000000004008b8 <+35>:	call   0x40085a <f>
+   0x00000000004008bd <+40>:	mov    %rax,%r12
+   0x00000000004008c0 <+43>:	mov    -0x14(%rbp),%eax
+   0x00000000004008c3 <+46>:	sub    -0x18(%rbp),%eax
+   0x00000000004008c6 <+49>:	mov    %eax,%edi
+   0x00000000004008c8 <+51>:	call   0x40085a <f>
+   0x00000000004008cd <+56>:	mov    %r12,%rdx
+   0x00000000004008d0 <+59>:	imul   %rax,%rdx
+   0x00000000004008d4 <+63>:	mov    %rdx,%rcx
+   0x00000000004008d7 <+66>:	mov    %rbx,%rax
+   0x00000000004008da <+69>:	cqto
+   0x00000000004008dc <+71>:	idiv   %rcx
+   0x00000000004008df <+74>:	add    $0x8,%rsp
+   0x00000000004008e3 <+78>:	pop    %rbx
+   0x00000000004008e4 <+79>:	pop    %r12
+   0x00000000004008e6 <+81>:	pop    %rbp
+   0x00000000004008e7 <+82>:	ret
+End of assembler dump.
+(gdb) disassemble process
+Dump of assembler code for function process:
+   0x00000000004008e8 <+0>:	push   %rbp
+   0x00000000004008e9 <+1>:	mov    %rsp,%rbp
+   0x00000000004008ec <+4>:	sub    $0x30,%rsp
+   0x00000000004008f0 <+8>:	mov    %edi,-0x24(%rbp)
+   0x00000000004008f3 <+11>:	mov    %fs:0x28,%rax
+   0x00000000004008fc <+20>:	mov    %rax,-0x8(%rbp)
+   0x0000000000400900 <+24>:	xor    %eax,%eax
+   0x0000000000400902 <+26>:	movl   $0x1,-0x10(%rbp)
+   0x0000000000400909 <+33>:	movl   $0x0,-0xc(%rbp)
+   0x0000000000400910 <+40>:	jmp    0x40094b <process+99>
+   0x0000000000400912 <+42>:	lea    -0x14(%rbp),%rax
+   0x0000000000400916 <+46>:	mov    %rax,%rsi
+   0x0000000000400919 <+49>:	mov    $0x400a98,%edi
+   0x000000000040091e <+54>:	mov    $0x0,%eax
+   0x0000000000400923 <+59>:	call   0x4006f0 <__isoc99_scanf@plt>
+   0x0000000000400928 <+64>:	mov    -0xc(%rbp),%edx
+   0x000000000040092b <+67>:	mov    -0x24(%rbp),%eax
+   0x000000000040092e <+70>:	mov    %edx,%esi
+   0x0000000000400930 <+72>:	mov    %eax,%edi
+   0x0000000000400932 <+74>:	call   0x400895 <C>
+   0x0000000000400937 <+79>:	mov    %eax,%edx
+   0x0000000000400939 <+81>:	mov    -0x14(%rbp),%eax
+   0x000000000040093c <+84>:	cmp    %eax,%edx
+   0x000000000040093e <+86>:	je     0x400947 <process+95>
+   0x0000000000400940 <+88>:	movl   $0x0,-0x10(%rbp)
+   0x0000000000400947 <+95>:	addl   $0x1,-0xc(%rbp)
+   0x000000000040094b <+99>:	mov    -0xc(%rbp),%eax
+   0x000000000040094e <+102>:	cmp    -0x24(%rbp),%eax
+   0x0000000000400951 <+105>:	jle    0x400912 <process+42>
+   0x0000000000400953 <+107>:	cmpl   $0x1,-0x10(%rbp)
+   0x0000000000400957 <+111>:	jne    0x400963 <process+123>
+   0x0000000000400959 <+113>:	mov    $0x400a9b,%edi
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x000000000040095e <+118>:	call   0x4006a0 <system@plt>
+   0x0000000000400963 <+123>:	mov    $0x0,%eax
+   0x0000000000400968 <+128>:	mov    -0x8(%rbp),%rcx
+   0x000000000040096c <+132>:	xor    %fs:0x28,%rcx
+   0x0000000000400975 <+141>:	je     0x40097c <process+148>
+   0x0000000000400977 <+143>:	call   0x400680 <__stack_chk_fail@plt>
+   0x000000000040097c <+148>:	leave
+   0x000000000040097d <+149>:	ret
+End of assembler dump.
+(gdb) disassemble triangle
+No symbol table is loaded.  Use the "file" command.
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x000000000040097e <+0>:	push   %rbp
+   0x000000000040097f <+1>:	mov    %rsp,%rbp
+   0x0000000000400982 <+4>:	sub    $0x10,%rsp
+   0x0000000000400986 <+8>:	mov    0x2006f3(%rip),%rax        # 0x601080 <stdout@@GLIBC_2.2.5>
+   0x000000000040098d <+15>:	mov    $0x0,%esi
+   0x0000000000400992 <+20>:	mov    %rax,%rdi
+   0x0000000000400995 <+23>:	call   0x400690 <setbuf@plt>
+   0x000000000040099a <+28>:	mov    0x2006ef(%rip),%rax        # 0x601090 <stdin@@GLIBC_2.2.5>
+   0x00000000004009a1 <+35>:	mov    $0x0,%esi
+   0x00000000004009a6 <+40>:	mov    %rax,%rdi
+   0x00000000004009a9 <+43>:	call   0x400690 <setbuf@plt>
+   0x00000000004009ae <+48>:	mov    0x2006eb(%rip),%rax        # 0x6010a0 <stderr@@GLIBC_2.2.5>
+   0x00000000004009b5 <+55>:	mov    $0x0,%esi
+   0x00000000004009ba <+60>:	mov    %rax,%rdi
+   0x00000000004009bd <+63>:	call   0x400690 <setbuf@plt>
+   0x00000000004009c2 <+68>:	movl   $0xf,-0xc(%rbp)
+   0x00000000004009c9 <+75>:	movl   $0x14,-0x8(%rbp)
+   0x00000000004009d0 <+82>:	mov    $0x0,%edi
+   0x00000000004009d5 <+87>:	call   0x4006e0 <time@plt>
+   0x00000000004009da <+92>:	mov    %eax,%edi
+   0x00000000004009dc <+94>:	call   0x4006d0 <srand@plt>
+   0x00000000004009e1 <+99>:	mov    -0x8(%rbp),%edx
+   0x00000000004009e4 <+102>:	mov    -0xc(%rbp),%eax
+   0x00000000004009e7 <+105>:	mov    %edx,%esi
+   0x00000000004009e9 <+107>:	mov    %eax,%edi
+   0x00000000004009eb <+109>:	call   0x400816 <display_number>
+   0x00000000004009f0 <+114>:	mov    %eax,-0x4(%rbp)
+   0x00000000004009f3 <+117>:	mov    -0x4(%rbp),%eax
+   0x00000000004009f6 <+120>:	mov    %eax,%edi
+   0x00000000004009f8 <+122>:	call   0x4008e8 <process>
+   0x00000000004009fd <+127>:	mov    $0x0,%eax
+   0x0000000000400a02 <+132>:	leave
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0000000000400a03 <+133>:	ret
+End of assembler dump.
+(gdb) run
+Starting program: /home/parmy/triangle
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+20
+12
+12
+23423234
+123456789098765434567876543234567876543
+2345678543245678965432678765435676754456789789654335678976544879765456789765456798765435678987654567897654356789765435678976543678654
+adasdasd
+[Inferior 1 (process 839344) exited normally]
+Missing rpms, try: dnf --enablerepo='*debug*' install glibc-debuginfo-2.41-16.fc42.x86_64
+(gdb) dasdasd
+Undefined command: "dasdasd".  Try "help".
+(gdb) q
+
+
+============================================================================================================================================================================================================================================================
+

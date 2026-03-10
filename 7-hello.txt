@@ -1,0 +1,203 @@
+parmy@fedora:~$ ls
+DigitsOnTurbo  hello  libc-2.23.so  triangle  turbo-digits
+parmy@fedora:~$ gdb ./hello
+GNU gdb (Fedora Linux) 16.3-1.fc42
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./hello...
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.fedoraproject.org/>
+Enable debuginfod for this session? (y or [n]) y
+Debuginfod has been enabled.
+To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
+Download failed: Connection refused.  Continuing without separate debug info for /home/parmy/hello.
+(No debugging symbols found in ./hello)
+(gdb) info functions
+All defined functions:
+
+Non-debugging symbols:
+0x08048424  _init
+0x08048460  setbuf@plt
+0x08048470  printf@plt
+0x08048480  free@plt
+0x08048490  strcpy@plt
+0x080484a0  realloc@plt
+0x080484b0  malloc@plt
+0x080484c0  puts@plt
+0x080484d0  __libc_start_main@plt
+0x080484e0  __isoc99_scanf@plt
+0x080484f0  __gmon_start__@plt
+0x08048500  _start
+0x08048530  __x86.get_pc_thunk.bx
+0x08048540  deregister_tm_clones
+0x08048570  register_tm_clones
+0x080485b0  __do_global_dtors_aux
+0x080485d0  frame_dummy
+0x080485fb  say_hello
+0x08048639  main
+0x08048700  __libc_csu_init
+0x08048760  __libc_csu_fini
+0x08048764  _fini
+(gdb) disassemble frame_dummy
+Dump of assembler code for function frame_dummy:
+   0x080485d0 <+0>:	mov    $0x8049f10,%eax
+   0x080485d5 <+5>:	mov    (%eax),%edx
+   0x080485d7 <+7>:	test   %edx,%edx
+   0x080485d9 <+9>:	jne    0x80485e0 <frame_dummy+16>
+   0x080485db <+11>:	jmp    0x8048570 <register_tm_clones>
+   0x080485dd <+13>:	lea    0x0(%esi),%esi
+   0x080485e0 <+16>:	mov    $0x0,%edx
+   0x080485e5 <+21>:	test   %edx,%edx
+   0x080485e7 <+23>:	je     0x80485db <frame_dummy+11>
+   0x080485e9 <+25>:	push   %ebp
+   0x080485ea <+26>:	mov    %esp,%ebp
+   0x080485ec <+28>:	sub    $0x14,%esp
+   0x080485ef <+31>:	push   %eax
+   0x080485f0 <+32>:	call   *%edx
+   0x080485f2 <+34>:	add    $0x10,%esp
+   0x080485f5 <+37>:	leave
+   0x080485f6 <+38>:	jmp    0x8048570 <register_tm_clones>
+End of assembler dump.
+(gdb) disassemble say_hello
+Dump of assembler code for function say_hello:
+   0x080485fb <+0>:	push   %ebp
+   0x080485fc <+1>:	mov    %esp,%ebp
+   0x080485fe <+3>:	add    $0xffffff80,%esp
+   0x08048601 <+6>:	push   0x8(%ebp)
+   0x08048604 <+9>:	lea    -0x80(%ebp),%eax
+   0x08048607 <+12>:	push   %eax
+   0x08048608 <+13>:	call   0x8048490 <strcpy@plt>
+   0x0804860d <+18>:	add    $0x8,%esp
+   0x08048610 <+21>:	push   $0x8048780
+   0x08048615 <+26>:	call   0x8048470 <printf@plt>
+   0x0804861a <+31>:	add    $0x4,%esp
+   0x0804861d <+34>:	lea    -0x80(%ebp),%eax
+   0x08048620 <+37>:	push   %eax
+   0x08048621 <+38>:	call   0x8048470 <printf@plt>
+   0x08048626 <+43>:	add    $0x4,%esp
+   0x08048629 <+46>:	push   $0x8048788
+   0x0804862e <+51>:	call   0x80484c0 <puts@plt>
+   0x08048633 <+56>:	add    $0x4,%esp
+   0x08048636 <+59>:	nop
+   0x08048637 <+60>:	leave
+   0x08048638 <+61>:	ret
+End of assembler dump.
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x08048639 <+0>:	push   %ebp
+   0x0804863a <+1>:	mov    %esp,%ebp
+   0x0804863c <+3>:	sub    $0xc,%esp
+   0x0804863f <+6>:	mov    0x804a064,%eax
+   0x08048644 <+11>:	push   $0x0
+   0x08048646 <+13>:	push   %eax
+   0x08048647 <+14>:	call   0x8048460 <setbuf@plt>
+   0x0804864c <+19>:	add    $0x8,%esp
+   0x0804864f <+22>:	mov    0x804a060,%eax
+   0x08048654 <+27>:	push   $0x0
+   0x08048656 <+29>:	push   %eax
+   0x08048657 <+30>:	call   0x8048460 <setbuf@plt>
+   0x0804865c <+35>:	add    $0x8,%esp
+   0x0804865f <+38>:	mov    0x804a040,%eax
+   0x08048664 <+43>:	push   $0x0
+   0x08048666 <+45>:	push   %eax
+   0x08048667 <+46>:	call   0x8048460 <setbuf@plt>
+   0x0804866c <+51>:	add    $0x8,%esp
+   0x0804866f <+54>:	movl   $0x0,-0x4(%ebp)
+   0x08048676 <+61>:	push   $0x0
+   0x08048678 <+63>:	call   0x80484b0 <malloc@plt>
+   0x0804867d <+68>:	add    $0x4,%esp
+   0x08048680 <+71>:	mov    %eax,-0x8(%ebp)
+   0x08048683 <+74>:	push   $0x804878a
+   0x08048688 <+79>:	call   0x80484c0 <puts@plt>
+   0x0804868d <+84>:	add    $0x4,%esp
+   0x08048690 <+87>:	lea    -0x9(%ebp),%eax
+   0x08048693 <+90>:	push   %eax
+   0x08048694 <+91>:	push   $0x804879c
+   0x08048699 <+96>:	call   0x80484e0 <__isoc99_scanf@plt>
+   0x0804869e <+101>:	add    $0x8,%esp
+   0x080486a1 <+104>:	addl   $0x1,-0x4(%ebp)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x080486a5 <+108>:	mov    -0x4(%ebp),%eax
+   0x080486a8 <+111>:	push   %eax
+   0x080486a9 <+112>:	push   -0x8(%ebp)
+   0x080486ac <+115>:	call   0x80484a0 <realloc@plt>
+   0x080486b1 <+120>:	add    $0x8,%esp
+   0x080486b4 <+123>:	mov    %eax,-0x8(%ebp)
+   0x080486b7 <+126>:	movzbl -0x9(%ebp),%eax
+   0x080486bb <+130>:	cmp    $0xa,%al
+   0x080486bd <+132>:	jne    0x80486ea <main+177>
+   0x080486bf <+134>:	mov    -0x4(%ebp),%eax
+   0x080486c2 <+137>:	lea    -0x1(%eax),%edx
+   0x080486c5 <+140>:	mov    -0x8(%ebp),%eax
+   0x080486c8 <+143>:	add    %edx,%eax
+   0x080486ca <+145>:	movb   $0x0,(%eax)
+   0x080486cd <+148>:	push   -0x8(%ebp)
+   0x080486d0 <+151>:	call   0x80485fb <say_hello>
+   0x080486d5 <+156>:	add    $0x4,%esp
+   0x080486d8 <+159>:	push   -0x8(%ebp)
+   0x080486db <+162>:	call   0x8048480 <free@plt>
+   0x080486e0 <+167>:	add    $0x4,%esp
+   0x080486e3 <+170>:	mov    $0x0,%eax
+   0x080486e8 <+175>:	jmp    0x80486fd <main+196>
+   0x080486ea <+177>:	mov    -0x4(%ebp),%eax
+   0x080486ed <+180>:	lea    -0x1(%eax),%edx
+   0x080486f0 <+183>:	mov    -0x8(%ebp),%eax
+   0x080486f3 <+186>:	add    %eax,%edx
+   0x080486f5 <+188>:	movzbl -0x9(%ebp),%eax
+   0x080486f9 <+192>:	mov    %al,(%edx)
+   0x080486fb <+194>:	jmp    0x8048690 <main+87>
+   0x080486fd <+196>:	leave
+   0x080486fe <+197>:	ret
+End of assembler dump.
+(gdb) run
+Starting program: /home/parmy/hello
+Download failed: Connection refused.  Continuing without separate debug info for system-supplied DSO at 0xf7fc4000.
+Download failed: Connection refused.  Continuing without separate debug info for /lib/libc.so.6.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+What's your name?
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+Hello, AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!
+
+Program received signal SIGSEGV, Segmentation fault.
+0x41414141 in ?? ()
+Missing rpms, try: dnf --enablerepo='*debug*' install glibc-debuginfo-2.41-16.fc42.i686
+(gdb) info registers
+eax            0x2                 2
+ecx            0x0                 0
+edx            0xf7f9a8e8          -134633240
+ebx            0xf7f98e34          -134640076
+esp            0xffffd1e8          0xffffd1e8
+ebp            0x41414141          0x41414141
+esi            0x0                 0
+edi            0xf7ffcb60          -134231200
+eip            0x41414141          0x41414141
+eflags         0x10296             [ PF AF SF IF RF ]
+cs             0x23                35
+ss             0x2b                43
+ds             0x2b                43
+es             0x2b                43
+fs             0x0                 0
+gs             0x63                99
+k0             0x0                 0
+k1             0x0                 0
+k2             0x0                 0
+k3             0x0                 0
+k4             0x0                 0
+k5             0x0                 0
+k6             0x0                 0
+k7             0x0                 0
+(gdb)
