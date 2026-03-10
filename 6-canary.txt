@@ -1,0 +1,181 @@
+❯ nc 10.0.118.104 4456
+Welcome to the CTF Challenge!
+You have access to the following tools:
+  - gdb: Inspect and debug the 'vuln' binary.
+  - vuln: Run the vulnerable binary.
+  - nc: Test exploitation with netcat.
+Explore the binary to find and exploit the vulnerability!
+----------------------------------------------------------
+ls
+bash
+flag.txt
+gdb
+lib
+lib64
+ls
+vuln
+welcome.sh
+
+gdb ./vuln
+GNU gdb (Ubuntu 7.7.1-0ubuntu5~14.04.3) 7.7.1
+Copyright (C) 2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./vuln...(no debugging symbols found)...done.
+(gdb) disassemble vuln
+Dump of assembler code for function vuln:
+   0x0000000000400997 <+0>:	push   %rbp
+   0x0000000000400998 <+1>:	mov    %rsp,%rbp
+   0x000000000040099b <+4>:	sub    $0x120,%rsp
+   0x00000000004009a2 <+11>:	movl   $0x0,-0x4(%rbp)
+   0x00000000004009a9 <+18>:	mov    0x2006fa(%rip),%eax        # 0x6010a9 <global_canary>
+   0x00000000004009af <+24>:	mov    %eax,-0x10(%rbp)
+   0x00000000004009b2 <+27>:	mov    $0x400b88,%edi
+   0x00000000004009b7 <+32>:	callq  0x400730 <puts@plt>
+   0x00000000004009bc <+37>:	jmp    0x4009f6 <vuln+95>
+   0x00000000004009be <+39>:	mov    -0x4(%rbp),%eax
+   0x00000000004009c1 <+42>:	cltq
+   0x00000000004009c3 <+44>:	lea    -0x110(%rbp),%rdx
+   0x00000000004009ca <+51>:	add    %rdx,%rax
+   0x00000000004009cd <+54>:	mov    $0x1,%edx
+   0x00000000004009d2 <+59>:	mov    %rax,%rsi
+   0x00000000004009d5 <+62>:	mov    $0x0,%edi
+   0x00000000004009da <+67>:	callq  0x400770 <read@plt>
+   0x00000000004009df <+72>:	mov    -0x4(%rbp),%eax
+   0x00000000004009e2 <+75>:	cltq
+   0x00000000004009e4 <+77>:	movzbl -0x110(%rbp,%rax,1),%eax
+   0x00000000004009ec <+85>:	cmp    $0xa,%al
+   0x00000000004009ee <+87>:	jne    0x4009f2 <vuln+91>
+   0x00000000004009f0 <+89>:	jmp    0x4009fc <vuln+101>
+   0x00000000004009f2 <+91>:	addl   $0x1,-0x4(%rbp)
+   0x00000000004009f6 <+95>:	cmpl   $0x7f,-0x4(%rbp)
+   0x00000000004009fa <+99>:	jle    0x4009be <vuln+39>
+   0x00000000004009fc <+101>:	lea    -0x114(%rbp),%rdx
+   0x0000000000400a03 <+108>:	lea    -0x110(%rbp),%rax
+   0x0000000000400a0a <+115>:	mov    $0x400bcf,%esi
+   0x0000000000400a0f <+120>:	mov    %rax,%rdi
+   0x0000000000400a12 <+123>:	mov    $0x0,%eax
+   0x0000000000400a17 <+128>:	callq  0x4007d0 <__isoc99_sscanf@plt>
+   0x0000000000400a1c <+133>:	mov    $0x400bd2,%edi
+   0x0000000000400a21 <+138>:	callq  0x400730 <puts@plt>
+   0x0000000000400a26 <+143>:	mov    0x200673(%rip),%rax        # 0x6010a0 <stdout@@GLIBC_2.2.5>
+   0x0000000000400a2d <+150>:	mov    %rax,%rdi
+   0x0000000000400a30 <+153>:	callq  0x4007c0 <fflush@plt>
+   0x0000000000400a35 <+158>:	mov    -0x114(%rbp),%eax
+   0x0000000000400a3b <+164>:	movslq %eax,%rdx
+   0x0000000000400a3e <+167>:	lea    -0x90(%rbp),%rax
+   0x0000000000400a45 <+174>:	mov    %rax,%rsi
+   0x0000000000400a48 <+177>:	mov    $0x0,%edi
+   0x0000000000400a4d <+182>:	callq  0x400770 <read@plt>
+   0x0000000000400a52 <+187>:	lea    -0x10(%rbp),%rax
+   0x0000000000400a56 <+191>:	mov    $0x4,%edx
+   0x0000000000400a5b <+196>:	mov    $0x6010a9,%esi
+   0x0000000000400a60 <+201>:	mov    %rax,%rdi
+   0x0000000000400a63 <+204>:	callq  0x400790 <memcmp@plt>
+   0x0000000000400a68 <+209>:	test   %eax,%eax
+   0x0000000000400a6a <+211>:	je     0x400a80 <vuln+233>
+   0x0000000000400a6c <+213>:	mov    $0x400be8,%edi
+   0x0000000000400a71 <+218>:	callq  0x400730 <puts@plt>
+   0x0000000000400a76 <+223>:	mov    $0xffffffff,%edi
+   0x0000000000400a7b <+228>:	callq  0x400800 <exit@plt>
+   0x0000000000400a80 <+233>:	mov    $0x400bf9,%edi
+   0x0000000000400a85 <+238>:	callq  0x400730 <puts@plt>
+   0x0000000000400a8a <+243>:	mov    $0xa,%edi
+   0x0000000000400a8f <+248>:	callq  0x400720 <putchar@plt>
+   0x0000000000400a94 <+253>:	mov    0x200605(%rip),%rax        # 0x6010a0 <stdout@@GLIBC_2.2.5>
+   0x0000000000400a9b <+260>:	mov    %rax,%rdi
+   0x0000000000400a9e <+263>:	callq  0x4007c0 <fflush@plt>
+   0x0000000000400aa3 <+268>:	leaveq
+   0x0000000000400aa4 <+269>:	retq
+End of assembler dump.
+(gdb) info functions
+All defined functions:
+
+Non-debugging symbols:
+0x00000000004006e8  _init
+0x0000000000400720  putchar@plt
+0x0000000000400730  puts@plt
+0x0000000000400740  fread@plt
+0x0000000000400750  fclose@plt
+0x0000000000400760  setresgid@plt
+0x0000000000400770  read@plt
+0x0000000000400780  __libc_start_main@plt
+0x0000000000400790  memcmp@plt
+0x00000000004007a0  fgets@plt
+0x00000000004007b0  __gmon_start__@plt
+0x00000000004007c0  fflush@plt
+0x00000000004007d0  __isoc99_sscanf@plt
+0x00000000004007e0  getegid@plt
+0x00000000004007f0  fopen@plt
+0x0000000000400800  exit@plt
+0x0000000000400810  _start
+0x0000000000400840  deregister_tm_clones
+0x0000000000400870  register_tm_clones
+0x00000000004008b0  __do_global_dtors_aux
+0x00000000004008d0  frame_dummy
+0x00000000004008fd  win
+0x0000000000400953  read_canary
+0x0000000000400997  vuln
+0x0000000000400aa5  main
+0x0000000000400af0  __libc_csu_init
+0x0000000000400b60  __libc_csu_fini
+0x0000000000400b64  _fini
+(gdb) disassemble read_canary
+Dump of assembler code for function read_canary:
+   0x0000000000400953 <+0>:	push   %rbp
+   0x0000000000400954 <+1>:	mov    %rsp,%rbp
+   0x0000000000400957 <+4>:	sub    $0x10,%rsp
+   0x000000000040095b <+8>:	mov    $0x400b78,%esi
+   0x0000000000400960 <+13>:	mov    $0x400b7a,%edi
+   0x0000000000400965 <+18>:	callq  0x4007f0 <fopen@plt>
+   0x000000000040096a <+23>:	mov    %rax,-0x8(%rbp)
+   0x000000000040096e <+27>:	mov    -0x8(%rbp),%rax
+   0x0000000000400972 <+31>:	mov    %rax,%rcx
+   0x0000000000400975 <+34>:	mov    $0x4,%edx
+   0x000000000040097a <+39>:	mov    $0x1,%esi
+   0x000000000040097f <+44>:	mov    $0x6010a9,%edi
+   0x0000000000400984 <+49>:	callq  0x400740 <fread@plt>
+   0x0000000000400989 <+54>:	mov    -0x8(%rbp),%rax
+   0x000000000040098d <+58>:	mov    %rax,%rdi
+   0x0000000000400990 <+61>:	callq  0x400750 <fclose@plt>
+   0x0000000000400995 <+66>:	leaveq
+   0x0000000000400996 <+67>:	retq
+End of assembler dump.
+(gdb) x/s 0x400b7a
+0x400b7a:	"flag.txt"
+(gdb) x/s 0x400b78
+0x400b78:	"r"
+(gdb) run
+Starting program: /buffer_ctf/vuln
+warning: Error disabling address space randomization: Operation not permitted
+
+Program received signal SIGSEGV, Segmentation fault.
+__GI__IO_fread (buf=0x6010a9 <global_canary>, size=1, count=4, fp=0x0)
+    at iofread.c:41
+41	iofread.c: No such file or directory.
+(gdb) q
+A debugging session is active.
+
+	Inferior 1 [process 71] will be killed.
+
+Quit anyway? (y or n) [answered Y; input not from terminal]
+./vuln
+20000242
+Go ahead, try to overflow me! I'll let you pick how many bytes to read
+Now enter the string
+
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+hacker detected!
+
+
+============================================================================================================================================================================================================================================================
