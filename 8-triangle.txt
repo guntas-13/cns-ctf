@@ -231,6 +231,11 @@ Missing rpms, try: dnf --enablerepo='*debug*' install glibc-debuginfo-2.41-16.fc
 Undefined command: "dasdasd".  Try "help".
 (gdb) q
 
-
 ============================================================================================================================================================================================================================================================
 
+❯ python 8-triangle.py
+[+] Opening connection to 10.0.118.104 on port 6464: Done
+n = 18
+[*] Switching to interactive mode
+cns431ctf{YEAH!y0u_d1sc0v3r3d_th3_p4sc4l's_tr14ngl3}
+[*] Got EOF while reading in interactive

