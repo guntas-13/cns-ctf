@@ -32,6 +32,59 @@ Find the GDB manual and other documentation resources online at:
 For help, type "help".
 Type "apropos word" to search for commands related to "word"...
 Reading symbols from ./vuln...(no debugging symbols found)...done.
+(gdb) info functions
+All defined functions:
+
+Non-debugging symbols:
+0x00000000004006e8  _init
+0x0000000000400720  putchar@plt
+0x0000000000400730  puts@plt
+0x0000000000400740  fread@plt
+0x0000000000400750  fclose@plt
+0x0000000000400760  setresgid@plt
+0x0000000000400770  read@plt
+0x0000000000400780  __libc_start_main@plt
+0x0000000000400790  memcmp@plt
+0x00000000004007a0  fgets@plt
+0x00000000004007b0  __gmon_start__@plt
+0x00000000004007c0  fflush@plt
+0x00000000004007d0  __isoc99_sscanf@plt
+0x00000000004007e0  getegid@plt
+0x00000000004007f0  fopen@plt
+0x0000000000400800  exit@plt
+0x0000000000400810  _start
+0x0000000000400840  deregister_tm_clones
+0x0000000000400870  register_tm_clones
+0x00000000004008b0  __do_global_dtors_aux
+0x00000000004008d0  frame_dummy
+0x00000000004008fd  win
+0x0000000000400953  read_canary
+0x0000000000400997  vuln
+0x0000000000400aa5  main
+0x0000000000400af0  __libc_csu_init
+0x0000000000400b60  __libc_csu_fini
+0x0000000000400b64  _fini
+(gdb) disassemble read_canary
+Dump of assembler code for function read_canary:
+   0x0000000000400953 <+0>:	push   %rbp
+   0x0000000000400954 <+1>:	mov    %rsp,%rbp
+   0x0000000000400957 <+4>:	sub    $0x10,%rsp
+   0x000000000040095b <+8>:	mov    $0x400b78,%esi
+   0x0000000000400960 <+13>:	mov    $0x400b7a,%edi
+   0x0000000000400965 <+18>:	callq  0x4007f0 <fopen@plt>
+   0x000000000040096a <+23>:	mov    %rax,-0x8(%rbp)
+   0x000000000040096e <+27>:	mov    -0x8(%rbp),%rax
+   0x0000000000400972 <+31>:	mov    %rax,%rcx
+   0x0000000000400975 <+34>:	mov    $0x4,%edx
+   0x000000000040097a <+39>:	mov    $0x1,%esi
+   0x000000000040097f <+44>:	mov    $0x6010a9,%edi
+   0x0000000000400984 <+49>:	callq  0x400740 <fread@plt>
+   0x0000000000400989 <+54>:	mov    -0x8(%rbp),%rax
+   0x000000000040098d <+58>:	mov    %rax,%rdi
+   0x0000000000400990 <+61>:	callq  0x400750 <fclose@plt>
+   0x0000000000400995 <+66>:	leaveq
+   0x0000000000400996 <+67>:	retq
+End of assembler dump.
 (gdb) disassemble vuln
 Dump of assembler code for function vuln:
    0x0000000000400997 <+0>:	push   %rbp
@@ -98,58 +151,29 @@ Dump of assembler code for function vuln:
    0x0000000000400aa3 <+268>:	leaveq
    0x0000000000400aa4 <+269>:	retq
 End of assembler dump.
-(gdb) info functions
-All defined functions:
-
-Non-debugging symbols:
-0x00000000004006e8  _init
-0x0000000000400720  putchar@plt
-0x0000000000400730  puts@plt
-0x0000000000400740  fread@plt
-0x0000000000400750  fclose@plt
-0x0000000000400760  setresgid@plt
-0x0000000000400770  read@plt
-0x0000000000400780  __libc_start_main@plt
-0x0000000000400790  memcmp@plt
-0x00000000004007a0  fgets@plt
-0x00000000004007b0  __gmon_start__@plt
-0x00000000004007c0  fflush@plt
-0x00000000004007d0  __isoc99_sscanf@plt
-0x00000000004007e0  getegid@plt
-0x00000000004007f0  fopen@plt
-0x0000000000400800  exit@plt
-0x0000000000400810  _start
-0x0000000000400840  deregister_tm_clones
-0x0000000000400870  register_tm_clones
-0x00000000004008b0  __do_global_dtors_aux
-0x00000000004008d0  frame_dummy
-0x00000000004008fd  win
-0x0000000000400953  read_canary
-0x0000000000400997  vuln
-0x0000000000400aa5  main
-0x0000000000400af0  __libc_csu_init
-0x0000000000400b60  __libc_csu_fini
-0x0000000000400b64  _fini
-(gdb) disassemble read_canary
-Dump of assembler code for function read_canary:
-   0x0000000000400953 <+0>:	push   %rbp
-   0x0000000000400954 <+1>:	mov    %rsp,%rbp
-   0x0000000000400957 <+4>:	sub    $0x10,%rsp
-   0x000000000040095b <+8>:	mov    $0x400b78,%esi
-   0x0000000000400960 <+13>:	mov    $0x400b7a,%edi
-   0x0000000000400965 <+18>:	callq  0x4007f0 <fopen@plt>
-   0x000000000040096a <+23>:	mov    %rax,-0x8(%rbp)
-   0x000000000040096e <+27>:	mov    -0x8(%rbp),%rax
-   0x0000000000400972 <+31>:	mov    %rax,%rcx
-   0x0000000000400975 <+34>:	mov    $0x4,%edx
-   0x000000000040097a <+39>:	mov    $0x1,%esi
-   0x000000000040097f <+44>:	mov    $0x6010a9,%edi
-   0x0000000000400984 <+49>:	callq  0x400740 <fread@plt>
-   0x0000000000400989 <+54>:	mov    -0x8(%rbp),%rax
-   0x000000000040098d <+58>:	mov    %rax,%rdi
-   0x0000000000400990 <+61>:	callq  0x400750 <fclose@plt>
-   0x0000000000400995 <+66>:	leaveq
-   0x0000000000400996 <+67>:	retq
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x0000000000400aa5 <+0>:	push   %rbp
+   0x0000000000400aa6 <+1>:	mov    %rsp,%rbp
+   0x0000000000400aa9 <+4>:	sub    $0x20,%rsp
+   0x0000000000400aad <+8>:	mov    %edi,-0x14(%rbp)
+   0x0000000000400ab0 <+11>:	mov    %rsi,-0x20(%rbp)
+   0x0000000000400ab4 <+15>:	callq  0x4007e0 <getegid@plt>
+   0x0000000000400ab9 <+20>:	mov    %eax,-0x4(%rbp)
+   0x0000000000400abc <+23>:	mov    -0x4(%rbp),%edx
+   0x0000000000400abf <+26>:	mov    -0x4(%rbp),%ecx
+   0x0000000000400ac2 <+29>:	mov    -0x4(%rbp),%eax
+   0x0000000000400ac5 <+32>:	mov    %ecx,%esi
+   0x0000000000400ac7 <+34>:	mov    %eax,%edi
+   0x0000000000400ac9 <+36>:	mov    $0x0,%eax
+   0x0000000000400ace <+41>:	callq  0x400760 <setresgid@plt>
+   0x0000000000400ad3 <+46>:	mov    $0x0,%eax
+   0x0000000000400ad8 <+51>:	callq  0x400953 <read_canary>
+   0x0000000000400add <+56>:	mov    $0x0,%eax
+   0x0000000000400ae2 <+61>:	callq  0x400997 <vuln>
+   0x0000000000400ae7 <+66>:	mov    $0x0,%eax
+   0x0000000000400aec <+71>:	leaveq
+   0x0000000000400aed <+72>:	retq
 End of assembler dump.
 (gdb) disassemble win
 Dump of assembler code for function win:
