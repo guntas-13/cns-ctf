@@ -1,0 +1,23 @@
+Challenge: events
+Target: http://10.0.118.48:7777
+
+Vulnerability:
+- Information disclosure via exposed frontend source code.
+- Sensitive value was embedded directly in a CSS comment in a publicly served static file.
+- Anyone can fetch `/static/style.css` and read the hidden comment.
+
+Steps taken to get the flag:
+1. Opened the challenge URL and observed a simple static event page.
+2. Enumerated routes and discovered static asset reference in HTML:
+   `/static/style.css`
+3. Fetched the stylesheet source.
+4. Found an inline comment:
+   `/* br@V0---{yoU_F0und_m3} */`
+5. Extracted the hidden string from that comment as the flag.
+
+Flag:
+br@V0---{yoU_F0und_m3}
+
+Automation:
+- Script added: 11-events.py
+- It requests `/static/style.css`, extracts the first CSS comment, and prints it.
