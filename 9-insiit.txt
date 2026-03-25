@@ -1,0 +1,23 @@
+Challenge: InsIIT
+Target: http://10.0.118.48:9999
+
+Vulnerability:
+- Information disclosure / security through obscurity failure.
+- The application exposes a sensitive hidden route in robots.txt:
+  Disallow: /fade/to/black
+- robots.txt is public and meant for crawler guidance, not access control.
+
+Steps taken to get the flag:
+1. Opened the target homepage and observed it looked like a static landing page.
+2. Enumerated common discovery files/endpoints (robots.txt, sitemap.xml, admin, login, etc.).
+3. Found a hint in /robots.txt containing:
+   Disallow: /fade/to/black
+4. Visited http://10.0.118.48:9999/fade/to/black
+5. Retrieved the flag directly from that page.
+
+Flag:
+cns431{you_snoopy_doo_didnt_i_tell_you_to_get_off_my_lawn}
+
+Automation:
+- Script added: 9-insiit.py
+- The script fetches robots.txt, extracts the Disallow path, requests it, and prints the response.
