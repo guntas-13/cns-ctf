@@ -1,0 +1,24 @@
+Challenge: oreo
+Target: http://10.0.118.48:8888
+
+Vulnerability:
+- Cookie tampering / insecure client-side trust.
+- The server uses a client-controlled cookie named `flavour` for logic.
+- Value is only Base64-encoded, not signed or integrity-protected.
+
+Steps taken to get the flag:
+1. Opened the target and saw a hint mentioning: "One wrong cookie..."
+2. Inspected response headers and found:
+   Set-Cookie: flavour=c3RyYXdiZXJyeQ%3D%3D
+3. Base64-decoded value to `strawberry`.
+4. Replaced cookie value with Base64(`chocolate`) => `Y2hvY29sYXRl`.
+5. Sent request with header:
+   Cookie: flavour=Y2hvY29sYXRl
+6. The server returned the flag in response body.
+
+Flag:
+ican{1ick_twi5t_dunk}
+
+Automation:
+- Script added: 10-oreo.py
+- It sends a tampered `flavour=Y2hvY29sYXRl` cookie and prints the response.
