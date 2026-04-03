@@ -1,0 +1,35 @@
+Challenge: the usual suspects
+Target: http://10.0.118.48:30379
+
+Vulnerability:
+- Server-Side Template Injection (SSTI) in the `icecream` GET parameter.
+- User input inside `{{ ... }}` is evaluated as Python expression by Tornado template engine.
+- App also relies on signed cookie `admin` to decide whether user is "worthy" to see the secret.
+
+What hinted this path:
+1. The dropdown option values were literally rendered as `{{chocolate}}`, `{{vanilla}}`, `{{butterscotch}}`.
+2. That pattern strongly suggested template expression handling.
+3. Submitting `?icecream={{7*7}}` returned `49`, confirming SSTI.
+
+What I tried and observed:
+1. Enumerated common routes (`/robots.txt`, `/admin`, `/login`, `/api`) -> nothing useful.
+2. Probed template context with `{{globals()}}` and found:
+   - `application` object in scope
+   - `secret` variable (default value: "Unfortunately, you aren't worthy")
+3. Read app settings via SSTI:
+   `{{application.settings}}` -> included `cookie_secret: 'MangoDB\\n'`
+4. Instead of implementing Tornado signing locally, used SSTI to ask server to sign the cookie directly:
+   `{{__import__("tornado.web").web.create_signed_value(application.settings.get("cookie_secret"),"admin","true")}}`
+5. Received valid signed cookie token for `admin=true`.
+6. Replayed that token as Cookie header and loaded `/`.
+7. Secret changed from "not worthy" message to the flag.
+
+Flag:
+dL@stCTF431{h3r3_i_4m}
+
+Automation:
+- Script added: 13-usual-suspects.py
+- Script flow:
+  1) trigger SSTI to generate signed admin cookie,
+  2) send cookie back,
+  3) extract and print secret/flag.
