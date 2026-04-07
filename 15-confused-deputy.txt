@@ -1,5 +1,0 @@
-the-confused-deputy
-
-"Don't you think we have hosted a pretty color? Pick your favourite and show it to the admin on /admin."
-
-$ http://10.0.118.48:7777/view
